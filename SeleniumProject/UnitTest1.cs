@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -10,7 +9,6 @@ namespace SeleniumProject
     public class Tests
     {
         private IWebDriver driver;
-        private WebDriverWait wait;
 
         [SetUp]
         public void start()
