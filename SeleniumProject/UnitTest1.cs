@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
@@ -14,7 +15,7 @@ namespace SeleniumProject
         [SetUp]
         public void start()
         {
-            driver = new FirefoxDriver(@"C:\distr");
+            driver = new FirefoxDriver();
         }
 
         [Test]
