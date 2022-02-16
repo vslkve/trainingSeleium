@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace SeleniumTests
 {
-    public class TestCase
+    public class Ex3
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
