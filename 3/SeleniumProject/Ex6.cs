@@ -8,13 +8,13 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace SeleniumTests
 {
     class Ex6
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
-        private string baseURL;
         private bool acceptNextAlert = true;
         protected WebDriverWait wait;
         
@@ -39,21 +39,23 @@ namespace SeleniumTests
             Menu();          
 
         }
-
+        
         public void Menu()
         {
             List<IWebElement> elementsMenu = driver.FindElements(By.Id("app-")).ToList();
             for (int i=0; i < elementsMenu.Count; i++)
             {
-                var elements = driver.FindElements(By.Id("app-")).ToList()[i];
+                var elements = driver.FindElement(By.XPath($"//ul[@id='box-apps-menu']/li[{i}+1]"));
                 elements.Click();
                 Assert.True(AreElementsPresent(By.XPath("//td[@id='content']/h1")));
                 if(AreElementsPresent(By.ClassName("docs")))
                 {
-                    List<IWebElement> elementUnderMenu = driver.FindElements(By.ClassName("docs")).ToList();
+                    var elementUnderMenu = driver.FindElements(By.XPath($"//ul[@id='box-apps-menu']/li[{i}+1]/ul/li")).ToList();
                     for (int j = 0; j < elementUnderMenu.Count; j++)
                     {
-                        elementUnderMenu[j].Click();
+                        var elementUnder = driver.FindElement(By.XPath($"//ul[@id='box-apps-menu']/li[{i}+1]/ul/li[{j}+1]"));
+                        elementUnder.Click();
+                        //Thread.Sleep(100);
                         Assert.True(AreElementsPresent(By.XPath("//td[@id='content']/h1")));
                     }
                 }
