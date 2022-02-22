@@ -15,7 +15,6 @@ namespace SeleniumTests
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
-        private string baseURL;
         private bool acceptNextAlert = true;
         protected WebDriverWait wait;
 
@@ -39,30 +38,70 @@ namespace SeleniumTests
             OpenHomePage();
             Login();
             OpenCountryPage();
-            
-            List<CountryList> notSortList = GetCountryList();
-            List<CountryList> SortList = GetCountryList();
-
-            var SortListNew = from u in SortList
-                              orderby u descending
-                              select u;
+            GetCountryList();
+            GetCountryZoneList();
+        }
+                
+        public void GetCountryList()
+        {
+            List<string> countries = new List<string>();
+            List<IWebElement> elements = driver.FindElements(By.ClassName("row")).ToList();
+            for (int i = 0; i < elements.Count; i++)
+            {
+                string CountryName = elements[i].FindElement(By.CssSelector("a")).GetAttribute("textContent");
+                countries.Add(CountryName);
+            }
+            List<string> notSortList = countries;
+            List<string> SortList = countries;
+            SortList.Sort();
             Assert.AreEqual(notSortList, SortList);
         }
-         
-        
 
-        public List<CountryList> GetCountryList()
+        public void GetCountryZoneList()
         {
-            List<CountryList> countries = new List<CountryList>();
-            ICollection<IWebElement> elements = driver.FindElements(By.ClassName("row")).ToList();
-            foreach (IWebElement element in elements)
+            List<string> zones = new List<string>();
+            List<IWebElement> elementsCountry = driver.FindElements(By.XPath("//form[@name='countries_form']/table//tr[@class='row']/td[5]/a")).ToList();            
+            for (int i = 0; i < elementsCountry.Count; i++)
             {
-                countries.Add(new CountryList(element.GetAttribute("textContent"))
+                var elementsCo = driver.FindElements(By.XPath("//form[@name='countries_form']/table//tr[@class='row']/td[5]/a")).ToList(); 
+                List<IWebElement> elementsZone = driver.FindElements(By.XPath("//*[@id='content']/form/table/tbody/tr[@class='row']/td[6]")).ToList();
+                if (elementsZone[i].GetAttribute("textContent") != "0")
                 {
-                    CountryName = element.FindElement(By.CssSelector("a")).GetAttribute("textContent")
-                });
+                    elementsCo[i].Click();
+
+                    //List<IWebElement> elements = driver.FindElements(By.XPath("//table[@id='table-zones']//tr[not(@class)]/td[3]")).ToList();
+                    //for (int j = 1; j <= elements.Count; j++)
+                    //{
+                    //    string ZoneName = elements[i].FindElement(By.XPath($"//*[@id='table - zones']/tbody/tr[{j}]/td[3]/input")).GetAttribute("value");
+                    //    zones.Add(ZoneName);
+                    //}
+
+                    var elements = driver.FindElements(By.CssSelector("tr>td:nth-child(3)>input[type=hidden]"));
+                    foreach (var element in elements)
+                    {
+                        var ZoneName = element.GetAttribute("value");
+                        zones.Add(ZoneName);                        
+                    }
+                    List<string> notSortList = zones;
+                    List<string> SortList = zones;
+                    SortList.Sort();
+                    Assert.AreEqual(notSortList, SortList);
+
+                    OpenCountryPage();                    
+                }
+            }            
+        }
+
+        public void GetList()
+        {
+
+            List<IWebElement> elements = driver.FindElements(By.ClassName("row")).ToList();
+            for (int i = 0; i < elements.Count; i++)
+            {
+                var element = elements[i].FindElement(By.CssSelector("a")).GetAttribute("textContent");
+                //((IJavaScriptExecutor)driver).ExecuteScript($"return console.log(`{element}`)");
+
             }
-            return countries;
         }
 
         private void OpenCountryPage()
