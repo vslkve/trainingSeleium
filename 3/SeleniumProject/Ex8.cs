@@ -40,6 +40,7 @@ namespace SeleniumTests
             OpenCountryPage();
             GetCountryList();
             GetCountryZoneList();
+            //GetList();
         }
                 
         public void GetCountryList()
@@ -78,13 +79,20 @@ namespace SeleniumTests
                     //    zones.Add(ZoneName);
                     //}
 
-                    var elements = driver.FindElements(By.XPath($"//table[@id='table-zones']//tr[not(@class)]/td[3]"));
+                    var elements = driver.FindElements(By.XPath("//table[@id='table-zones']//tr[not(@class)]/td[3]/input"));
                     foreach (var element in elements)
                     {
                         var ZoneName = element.GetAttribute("value");
                         zones.Add(ZoneName);
                         notSortZones.Add(ZoneName);
-                    }                    
+                    }
+                    zones.RemoveAt(zones.Count - 1);
+                    //for (int j = 0; j < zones.Count; j++)
+                    //{
+                    //    ((IJavaScriptExecutor)driver).ExecuteScript($"return console.log(`{zones[j]}`)");
+                    //}
+                    //Thread.Sleep(10000);
+                    notSortZones.RemoveAt(notSortZones.Count - 1);                    
                     List<string> SortList = zones;
                     SortList.Sort();
                     Assert.AreEqual(notSortZones, SortList);
@@ -94,17 +102,32 @@ namespace SeleniumTests
             }            
         }
 
-        public void GetList()
-        {
+        //public void GetList()
+        //{
 
-            List<IWebElement> elements = driver.FindElements(By.ClassName("row")).ToList();
-            for (int i = 0; i < elements.Count; i++)
-            {
-                var element = elements[i].FindElement(By.CssSelector("a")).GetAttribute("textContent");
-                //((IJavaScriptExecutor)driver).ExecuteScript($"return console.log(`{element}`)");
+        //    List<IWebElement> elements = driver.FindElements(By.ClassName("row")).ToList();
+        //    for (int i = 0; i < elements.Count; i++)
+        //    {
+        //        var elementsCo = driver.FindElements(By.XPath("//form[@name='countries_form']/table//tr[@class='row']/td[5]/a")).ToList();
+        //        List<IWebElement> elementsZone = driver.FindElements(By.XPath("//*[@id='content']/form/table/tbody/tr[@class='row']/td[6]")).ToList();
+        //        if (elementsZone[i].GetAttribute("textContent") != "0")
+        //        {
+        //            elementsCo[i].Click();
+        //            var elementsd = driver.FindElements(By.XPath("//table[@id='table-zones']//tr[not(@class)]/td[3]/input"));
+        //            foreach (var element in elementsd)
+        //            {
+        //                var ZoneName = element.GetAttribute("value");
+        //                ((IJavaScriptExecutor)driver).ExecuteScript($"return console.log(`{ZoneName}`)");                                               
+        //            }
+        //            Thread.Sleep(10000);
+        //            OpenCountryPage();
 
-            }
-        }
+        //        }
+        //         //   var element = elements[i].FindElement(By.CssSelector("a")).GetAttribute("textContent");
+        //        //((IJavaScriptExecutor)driver).ExecuteScript($"return console.log(`{element}`)");
+
+        //    }
+        //}
 
         private void OpenCountryPage()
         {
@@ -183,8 +206,8 @@ namespace SeleniumTests
         [TearDown]
         public void TeardownTest()
         {
-            driver.Quit();
-            driver = null;
+            //driver.Quit();
+            //driver = null;
         }
         
     }
