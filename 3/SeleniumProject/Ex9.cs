@@ -44,8 +44,7 @@ namespace SeleniumTests
 
 
         public void GetCountryZoneList()
-        {
-            List<string> zones = new List<string>();
+        {            
             List<IWebElement> elementsGeoZone = driver.FindElements(By.XPath("//form[@name='geo_zones_form']/table//tr[@class='row']/td[3]/a")).ToList();
             for (int i = 0; i < elementsGeoZone.Count; i++)
             {
@@ -53,17 +52,19 @@ namespace SeleniumTests
                 List<IWebElement> elementsZone = driver.FindElements(By.XPath("//form[@name='geo_zones_form']/table//tr[@class='row']/td[4]")).ToList();
                 if (elementsZone[i].GetAttribute("textContent") != "0")
                 {
+                    List<string> zones = new List<string>();
+                    List<string> notSortZones = new List<string>();
                     elementsGeoZ[i].Click();
                     var elements = driver.FindElements(By.XPath("//table[@class='dataTable']//tr[not(@class)]/td[3]//option[@selected='selected']"));
                     foreach (var element in elements)
                     {
                         var ZoneName = element.GetAttribute("textContent");                        
                         zones.Add(ZoneName);
-                    }
-                    List<string> notSortList = zones;
+                        notSortZones.Add(ZoneName);
+                    }                    
                     List<string> SortList = zones;
                     SortList.Sort();
-                    Assert.AreEqual(notSortList, SortList);
+                    Assert.AreEqual(notSortZones, SortList);
 
                     OpenGeoZonePage();
                 }

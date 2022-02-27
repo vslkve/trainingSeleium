@@ -45,21 +45,21 @@ namespace SeleniumTests
         public void GetCountryList()
         {
             List<string> countries = new List<string>();
+            List<string> notSortCountries = new List<string>();
             List<IWebElement> elements = driver.FindElements(By.ClassName("row")).ToList();
             for (int i = 0; i < elements.Count; i++)
             {
                 string CountryName = elements[i].FindElement(By.CssSelector("a")).GetAttribute("textContent");
                 countries.Add(CountryName);
-            }
-            List<string> notSortList = countries;
+                notSortCountries.Add(CountryName);
+            }            
             List<string> SortList = countries;
             SortList.Sort();
-            Assert.AreEqual(notSortList, SortList);
+            Assert.AreEqual(notSortCountries, SortList);
         }
 
         public void GetCountryZoneList()
-        {
-            List<string> zones = new List<string>();
+        {            
             List<IWebElement> elementsCountry = driver.FindElements(By.XPath("//form[@name='countries_form']/table//tr[@class='row']/td[5]/a")).ToList();            
             for (int i = 0; i < elementsCountry.Count; i++)
             {
@@ -67,6 +67,8 @@ namespace SeleniumTests
                 List<IWebElement> elementsZone = driver.FindElements(By.XPath("//*[@id='content']/form/table/tbody/tr[@class='row']/td[6]")).ToList();
                 if (elementsZone[i].GetAttribute("textContent") != "0")
                 {
+                    List<string> zones = new List<string>();
+                    List<string> notSortZones = new List<string>();
                     elementsCo[i].Click();
 
                     //List<IWebElement> elements = driver.FindElements(By.XPath("//table[@id='table-zones']//tr[not(@class)]/td[3]")).ToList();
@@ -76,16 +78,16 @@ namespace SeleniumTests
                     //    zones.Add(ZoneName);
                     //}
 
-                    var elements = driver.FindElements(By.CssSelector("tr>td:nth-child(3)>input[type=hidden]"));
+                    var elements = driver.FindElements(By.XPath($"//table[@id='table-zones']//tr[not(@class)]/td[3]"));
                     foreach (var element in elements)
                     {
                         var ZoneName = element.GetAttribute("value");
-                        zones.Add(ZoneName);                        
-                    }
-                    List<string> notSortList = zones;
+                        zones.Add(ZoneName);
+                        notSortZones.Add(ZoneName);
+                    }                    
                     List<string> SortList = zones;
                     SortList.Sort();
-                    Assert.AreEqual(notSortList, SortList);
+                    Assert.AreEqual(notSortZones, SortList);
 
                     OpenCountryPage();                    
                 }
