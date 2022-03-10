@@ -56,8 +56,8 @@ namespace SeleniumTests
                 ICollection<string> oldWindows = driver.WindowHandles;
 
                 LinkList[i].Click();
-                wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.CssSelector("h1")));
-                driver.SwitchTo().Window(driver.WindowHandles.Last());
+                string newWindow = wait.Until(AnyWindowOtherThan(oldWindows));
+                driver.SwitchTo().Window(newWindow);
                 wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.CssSelector("h1")));
                 driver.Close();
 
@@ -86,6 +86,16 @@ namespace SeleniumTests
         private void OpenHomePage()
         {
             driver.Navigate().GoToUrl("http://localhost/litecart/admin/login.php");
+        }
+
+        private static Func<IWebDriver, string> AnyWindowOtherThan(ICollection<string> oldWindows)
+        {
+            return (driver) =>
+            {
+                List<string> newWindows = new List<string>(driver.WindowHandles);
+                newWindows.RemoveAll(h => oldWindows.Contains(h));
+                return newWindows.Count > 0 ? newWindows[0] : null;
+            };
         }
 
         public bool AreElementsPresent(By locator)
