@@ -25,10 +25,8 @@ namespace SeleniumTests
         public void SetupTest()
         {
             InternetExplorerOptions options = new InternetExplorerOptions();
-            //options.RequireWindowFocus = true;
+            options.RequireWindowFocus = true;
             options.UnhandledPromptBehavior = UnhandledPromptBehavior.Dismiss;
-            options.AddAdditionalCapability("IGNORE_ZOOM_SETTING", "false");
-            options.AddAdditionalCapability("INTRODUCE_FLAKENESS_BY_IGNORING_SECURITY_DOMAINS", "false");
             driver = new InternetExplorerDriver(options);
             verificationErrors = new StringBuilder();
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
